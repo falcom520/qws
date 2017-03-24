@@ -3,3 +3,6 @@ qcs is api gateway by openresty,it support load balance, statistics,rateLimit et
 
 ##
 qcs is lua language develop api gateway
+
+
+![](https://github.com/falcom520/qcs/blob/master/doc/qcs-01.png)
