@@ -22,8 +22,6 @@ $(function(){
               }else{
                 content += "<td><span class=\"badge bg-red\">fail</span></td>";
               }
-              content += "<td>"+v.created_time+"</td>";
-              content += "<td>"+v.updated_time+"</td>";
               if(v.is_forbidden == 0){
                 content += "<td><span class=\"badge bg-green\">ok</span></td>";
               }else{

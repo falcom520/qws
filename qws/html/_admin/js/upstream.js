@@ -17,8 +17,6 @@ $(function(){
               content += "<td>"+v.connect_timeout+"</td>";
               content += "<td>"+v.send_timeout+"</td>";
               content += "<td>"+v.read_timeout+"</td>";
-              content += "<td>"+v.created_time+"</td>";
-              content += "<td>"+v.updated_time+"</td>";
               if(v.is_forbidden == 0){
                 content += "<td><span class=\"badge bg-green\">ok</span></td>";
               }else{
@@ -31,7 +29,7 @@ $(function(){
               $("tbody").append(content);
               });
           }else{
-			var no_data = "<tr id=\"tips\" style=\"text-align:center;\"><td colspan=\"15\" class=\"box-title\">no data</td></tr>";
+			var no_data = "<tr id=\"tips\" style=\"text-align:center;\"><td colspan=\"13\" class=\"box-title\">no data</td></tr>";
 			$("#tab-menu ~ tr").remove();
 			$("tbody").append(no_data);
 		  }

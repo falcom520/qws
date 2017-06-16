@@ -3,7 +3,7 @@
 
 return {
     VER = "QWS v1.0.0",
-    JS_VER = "1.0.0.20170519",
+    JS_VER = "1.0.0.20170616",
     CSS_VER = "1.0.0.20170518",
 
     SYS_LOG = "/tmp/qws_system.log",
@@ -15,8 +15,8 @@ return {
     MYSQL_SERVER = { 
         host = "127.0.0.1",
         port = 3306,
-        username = "qws",
-        password = "123456",
+        username = "iot",
+        password = "Onxd48OVLkao7ncv",
         dbname = "qws_system",
         charset = "utf8"
     },
