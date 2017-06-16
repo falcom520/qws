@@ -6,7 +6,7 @@ local template  = require "qws.vendor.template"
 local response  = require "qws.tools.response"
 local util      = require "qws.tools.util"
 local config    = require "qws.config.config"
-local users     = require "qws.dao.user"
+local users     = require "qws.config.user"
 local cache     = require "qws.dao.cache"
 local upstream  = require "qws.dao.upstream"
 

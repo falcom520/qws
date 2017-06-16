@@ -7,7 +7,7 @@ return {
     CSS_VER = "1.0.0.20170518",
 
     SYS_LOG = "/tmp/qws_system.log",
-    TEMPLATE_ROOT = "/home/work/workspace/qws.git/qws/html",
+    TEMPLATE_ROOT = "/root/workspace/qws/qws/html",
     DNS_SERVERS = { nameservers = {"223.5.5.5","223.6.6.6",{"114.114.114.114",53}},
                     retrans = 3,
                     timeout = 3000, -- 3 sec
@@ -20,6 +20,6 @@ return {
         dbname = "qws_system",
         charset = "utf8"
     },
-    SSL_DIR = "/home/work/workspace/qws.git/qws/ssl",
+    SSL_DIR = "/root/workspace/qws/qws/ssl",
     PLUGINS = {},--{"log","rate-limiting","request-size-limiting"},
 }

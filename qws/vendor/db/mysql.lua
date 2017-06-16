@@ -19,7 +19,7 @@ local function config(lib)
 	if not C then
 		if not lib or lib == 'mysql' then
 			--C = ffi.load(ffi.abi'win' and 'libmysql' or 'libmysqlclient')
-			C = ffi.load("/usr/lib64/mysql/libmysqlclient.so.18")
+			C = ffi.load("/usr/local/mysql/lib/libmysqlclient.so")
 		elseif lib == 'mariadb' then
 			C = ffi.load(ffi.abi'win' and 'libmariadb' or 'mariadb')
 		elseif type(lib) == 'string' then
