@@ -1,0 +1,291 @@
+{(_admin/layout/header.html)}
+<div class="wrapper">
+
+	{(_admin/layout/top_header.html)}
+	{(_admin/layout/menu.html)}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        LoadBalance
+        <small>upstream control</small>
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+		<div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Upstream Setting</h3>
+              <div class="btn-group pull-right">
+                <label><button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;Add&nbsp;&nbsp;</button></label>
+                <label><button type="button" class="btn btn-info" id="refresh">Refresh</button></label>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered">
+                <tbody><tr id="tab-menu">
+                  <th style="width: 10px">#</th>
+                  <th>upstream_id</th>
+                  <th>service name</th>
+                  <th>host</th>
+                  <th>http/https</th>
+                  <th>LoadBalance</th>
+                  <th>connect_timeout<br/>(ms)</th>
+                  <th>send_timeout<br/>(ms)</th>
+                  <th>read_timeout<br/>(ms)</th>
+                  <th>created_time</th>
+                  <th>updated_time</th>
+                  <th>is_forbidden</th>
+                  <th>view servers</th>
+                  <th>view route</th>
+                  <th style="width: 115px"></th>
+                </tr>
+                <tr id="tips" style="text-align:center;">
+                  <td colspan="12" class="box-title">no data</td>
+                </tr>
+              </tbody></table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  {(_admin/layout/bottom.html)}
+</div>
+<!-- ./wrapper -->
+
+<!-- add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Upstream</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="addform">
+          <div class="box-body">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-3 control-label">Service Name</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="name" placeholder="project name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-3 control-label">Host</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="host" placeholder="api.xxx.cn">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="scheme" class="col-sm-3 control-label">Scheme</label>
+              <div class="col-sm-8">
+              <select class="form-control" name="scheme">
+                <option value="http">http</option>
+                <option value="https">https</option>
+              </select>
+              </div>
+            </div>
+			<div class="form-group" id="ssl_pem" style="display:none">
+			  <label for="inputEmail3" class="col-sm-3 control-label">SSL Pem,Crt</label>
+              <div class="col-sm-4">
+				<input name="ssl_pem" type="file" class="filestyle" data-buttonText="PEM">
+              </div>
+			  <div class="col-sm-4">
+                <input name="ssl_crt" type="file" class="filestyle" data-buttonText="CRT">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="scheme" class="col-sm-3 control-label">LoadBalance</label>
+              <div class="col-sm-8">
+              <select class="form-control" name="lb">
+                <option value="0">Random</option>
+                <option value="1">RR</option>
+                <option value="2">IP Hash</option>
+                <option value="3">URL Hash</option>
+              </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="connect_timeout" class="col-sm-3 control-label">connect_timeout</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="connect_timeout" placeholder="60000ms">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="send_timeout" class="col-sm-3 control-label">send_timeout</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="send_timeout" placeholder="60000ms">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="send_timeout" class="col-sm-3 control-label">read_timeout</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="read_timeout" placeholder="60000ms">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="status" class="col-sm-3 control-label">is forbidden?</label>
+              <div class="col-sm-8">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="status"  value="1" checked=""> Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="status"  value="0" checked=""> No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="form-group" id="add-tips-err">
+              <label for="read_timeout" class="col-sm-8 control-label"></label>
+            </div>
+          <!-- /.box-footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="addsubmit">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit Upstream</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editform">
+          <input type="hidden" name="upstream_id" value="" />
+          <div class="box-body">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-3 control-label">Service Name</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="name" placeholder="project name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-3 control-label">Host</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="host" placeholder="api.xx.cn" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="scheme" class="col-sm-3 control-label">Scheme</label>
+              <div class="col-sm-8">
+              <select class="form-control" name="scheme">
+                <option value="http">http</option>
+                <option value="https">https</option>
+              </select>
+              </div>
+            </div>
+			<div class="form-group" id="ssl_pem" style="display:none">
+			  <label for="inputEmail3" class="col-sm-3 control-label">SSL Pem,Crt</label>
+              <div class="col-sm-4">
+				<input name="ssl_pem" type="file" class="filestyle" data-buttonText="PEM">
+              </div>
+			  <div class="col-sm-4">
+                <input name="ssl_crt" type="file" class="filestyle" data-buttonText="CRT">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="scheme" class="col-sm-3 control-label">LoadBalance</label>
+              <div class="col-sm-8">
+              <select class="form-control" name="lb">
+                <option value="0">Random</option>
+                <option value="1">RR</option>
+                <option value="2">IP Hash</option>
+                <option value="3">URL Hash</option>
+              </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="connect_timeout" class="col-sm-3 control-label">connect_timeout</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="connect_timeout" placeholder="60" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="send_timeout" class="col-sm-3 control-label">send_timeout</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="send_timeout" placeholder="60" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="read_timeout" class="col-sm-3 control-label">read_timeout</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" name="read_timeout" placeholder="60">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="status" class="col-sm-3 control-label">is forbidden?</label>
+              <div class="col-sm-8">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="status" value="1"> Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="status" value="0"> No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="form-group" id="edit-tips-err">
+              <label for="read_timeout" class="col-sm-8 control-label"></label>
+            </div>
+          <!-- /.box-footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="editsubmit">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete Upstream</h4>
+      </div>
+      <div class="modal-body">
+        do you really remove this upstream?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delsubmit" data-upstreamid="">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/jquery-2.2.3.min.js?v={{js_ver}}"></script>
+<script src="/js/bootstrap.min.js?v={{js_ver}}"></script>
+<script src="/js/jquery.slimscroll.min.js?v={{js_ver}}"></script>
+<script src="/js/fastclick.min.js?v={{js_ver}}"></script>
+<script src="/js/app.min.js?v={{js_ver}}"></script>
+<script src="/js/demo.js?v={{js_ver}}"></script>
+<script src="/js/fileinput.min.js?v={{js_ver}}"></script>
+<script src="/js/upstream.js?v={{js_ver}}"></script>
+{(_admin/layout/footer.html)}

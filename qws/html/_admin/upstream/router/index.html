@@ -1,0 +1,274 @@
+{(_admin/layout/header.html)}
+<style>
+	.clspaddingr{padding-right:0; margin-top:4px;}
+	.hclsbtn{height:34px; line-height:34px;}
+	.zeromargin{margin-top:0;}
+</style>
+<div class="wrapper">
+
+	{(_admin/layout/top_header.html)}
+	{(_admin/layout/menu.html)}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        LoadBalance
+        <small>router control</small>
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+		<div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Router Setting&nbsp;&nbsp;&nbsp;&nbsp;<span id="upstream_host"></span></h3>
+              <div class="btn-group pull-right">
+                <label><button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal" data-upstream-id="{{upstream_id}}">&nbsp;&nbsp;Add&nbsp;&nbsp;</button></label>
+                <label><button type="button" class="btn btn-info" id="refresh">Refresh</button></label>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" data-upstream-id="{{upstream_id}}">
+              <table class="table table-bordered">
+                <tbody><tr id="tab-menu">
+                  <th style="width: 10px">#</th>
+                  <th>router_id</th>
+                  <th>server_id</th>
+                  <th>rule<small class="text-green"></small></th>
+                  <th>uri</th>
+                  <th>new_uri</th>
+                  <th>created_time</th>
+                  <th>updated_time</th>
+                  <th>is_forbidden</th>
+                  <th style="width: 115px"></th>
+                </tr>
+                <tr id="tips" style="text-align:center;">
+                  <td colspan="10" class="box-title">no data</td>
+                </tr>
+              </tbody></table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  {(_admin/layout/bottom.html)}
+</div>
+<!-- ./wrapper -->
+
+<!-- add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Router</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="addform">
+          <input type="hidden" name="upstream_id" value="" />
+          <div class="box-body">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-2 control-label">URI</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="uri" placeholder="/">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-2 control-label">New Uri</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="new_uri" placeholder="/" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="scheme" class="col-sm-2 control-label">ServerId</label>
+              <div class="col-sm-9" id="add-server-option">
+              </div>
+            </div>
+            <div class="form-group" id="rule-option-add">
+                <label for="scheme" class="col-sm-2 control-label">Rule</label>
+                <div class="col-lg-8 clspaddingr" name="rulerows">
+                  <div>
+                  <div class="input-group">
+                    <div class="input-group-btn">
+                      <select class="btn btn-default" name="rule_type">
+                        <option value="CLIENTIP">ClientIP</option>
+						<option value="ABTest">ABTest</option>
+                        <option value="HEAD">head</option>
+                        <option value="URI">Query</option>
+                      </select>
+                    </div>
+                    <input type="text" class="form-control" aria-label="..." name="clientip" placeholder="192.168.1.200,210.12.20.100">
+					<div class="rows" style="display:none;">
+					  <div class="col-lg-4 clspaddingr zeromargin">
+						<input type="text" class="form-control" aria-label="..." name="field" placeholder="param">
+					  </div>
+					  <div class="col-lg-8 clspaddingr zeromargin">
+						<input type="text" class="form-control" aria-label="..." name="value" placeholder="value">
+					  </div>
+					</div>
+				  </div>
+                  </div>
+                </div>
+				<div class="col-lg-1 clspaddingr"><i class="fa fa-fw fa-close hclsbtn"></i></div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2"></label>
+              <div class="col-sm-9">
+                    <a type="button" class="btn btn-default" id="add-add-rule">add</a>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="status" class="col-sm-3 control-label">is forbidden?</label>
+              <div class="col-sm-8">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="is_forbidden"  value="1" checked=""> Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="is_forbidden"  value="0" checked=""> No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="form-group" id="add-tips-err">
+              <label for="read_timeout" class="col-sm-8 control-label"></label>
+            </div>
+          <!-- /.box-footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="addsubmit">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit Router</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editform">
+          <input type="hidden" name="router_id" value="" />
+          <div class="box-body">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-2 control-label">URI</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="uri" placeholder="/">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-2 control-label">New Uri</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="new_uri" placeholder="/" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="scheme" class="col-sm-2 control-label">ServerId</label>
+              <div class="col-sm-9" id="edit-server-option">
+              </div>
+            </div>
+            <div class="form-group" id="rule-option">
+                <label for="scheme" class="col-sm-2 control-label">Rule</label>
+                <div class="col-lg-8 clspaddingr" name="rulerows">
+                  <div>
+                  <div class="input-group">
+                    <div class="input-group-btn">
+                      <select class="btn btn-default" name="rule_type">
+                        <option value="CLIENTIP">ClientIP</option>
+						<option value="ABTest">ABTest</option>
+                        <option value="HEAD">head</option>
+                        <option value="URI">Query</option>
+                      </select>
+                    </div>
+                    <input type="text" class="form-control" aria-label="..." name="clientip" placeholder="192.168.1.200,210.12.20.100">
+					<div class="rows" style="display:none;">
+					  <div class="col-lg-4 clspaddingr zeromargin">
+						<input type="text" class="form-control" aria-label="..." name="field" placeholder="param">
+					  </div>
+					  <div class="col-lg-8 clspaddingr zeromargin">
+						<input type="text" class="form-control" aria-label="..." name="value" placeholder="value">
+					  </div>
+					</div>
+				  </div>
+                  </div>
+                </div>
+				<div class="col-lg-1 clspaddingr" style="visibility:hidden"><i class="fa fa-fw fa-close hclsbtn"></i></div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2"></label>
+              <div class="col-sm-9">
+                    <a type="button" class="btn btn-default" id="edit-add-rule">add</a>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="status" class="col-sm-2 control-label">is forbidden?</label>
+              <div class="col-sm-9">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="is_forbidden" value="1"> Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="is_forbidden" value="0"> No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="form-group" id="add-tips-err">
+              <label for="read_timeout" class="col-sm-9 control-label"></label>
+            </div>
+          <!-- /.box-footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="editsubmit">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete Router</h4>
+      </div>
+      <div class="modal-body">
+        do you really remove this router?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delsubmit" data-router-id="">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/jquery-2.2.3.min.js?v={{js_ver}}"></script>
+<script src="/js/bootstrap.min.js?v={{js_ver}}"></script>
+<script src="/js/jquery.slimscroll.min.js?v={{js_ver}}"></script>
+<script src="/js/fastclick.min.js?v={{js_ver}}"></script>
+<script src="/js/app.min.js?v={{js_ver}}"></script>
+<script src="/js/demo.js?v={{js_ver}}"></script>
+<script src="/js/router.js?v={{js_ver}}"></script>
+{(_admin/layout/footer.html)}
