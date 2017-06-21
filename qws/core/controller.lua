@@ -59,16 +59,23 @@ end
 
 -- dashboard controller
 router['/_admin/dashboard'] = function()
+
+    local _upstream_list = upstream:get_all_upstream()
+    local upstream_list = {}
+    for k,v in pairs(_upstream_list) do
+        upstream_list[k] = {name = v.name,upstream_id = v.upstream_id}
+    end
     local message = {
-        message     = _msg,
-        status      = status,
-        content_type= content_type,
-        ver         = config.VER,
-        controller  = controller,
-        action      = action,
-        js_ver      = config.JS_VER,
-        css_ver     = config.CSS_VER,
-        user        = check_auth(),
+        message = _msg,
+        status = status,
+        content_type = content_type,
+        ver = config.VER,
+        controller = controller,
+        action = action,
+        js_ver = config.JS_VER,
+        css_ver = config.CSS_VER,
+        user = check_auth(),
+        upstream = upstream_list,
     }
     local view = "_admin/dashboard/index.html"
     var.template_root = config.TEMPLATE_ROOT
@@ -409,7 +416,112 @@ router['/api/router'] = function()
     end
 end
 
----- api controller
+router['/api/real_stat'] = function()
+    local data = {errCode = 0,errMsg = "",data = {}}
+    local stat = require "qws.dao.stat"
+    local stat_array = stat:get_keys(0)
+    for k,v in pairs(stat_array) do
+        local _item = util.split(v,":")
+        local backend = util.split(_item[2],"-")
+        if #backend ~= 2 then
+            backend[#backend+1] = 80
+        end
+        local item = {upstream_id = _item[1],backend = backend[1]..":"..backend[2],method = _item[3],uri = _item[4],status = _item[5]}
+        item.request_num = stat:get(v)
+        data.data[k] = item
+    end
+    return response:send_json(data)   
+end
+
+router['/api/real_del'] = function()
+    local data = {errCode = 0,errMsg = "",data = {}}
+    local stat = require "qws.dao.stat"
+    local stat_array = stat:get_keys(0)
+    for k,v in pairs(stat_array) do
+        stat:delete(v)
+    end
+    return response:send_json(data)
+end
+
+router['/api/stat'] = function()
+    local data = {errCode = 0,errMsg = "",data = {}}
+    local access_log_stat = require "qws.dao.access_log_stat"
+    if action == "get_host_stat" then
+        local _stat = access_log_stat:get_host_stat()
+        local item = {}
+        local _item = {}
+        for k,v in pairs(_stat) do
+            if not _item[v.upstream_id] then
+                item[v.upstream_id] = v.name
+                _item[v.upstream_id] = v.upstream_id
+            end
+        end
+        local status_stat = access_log_stat:get_stat_list()
+        local upstream_list = upstream:get_all_upstream()
+        local upstream_stat = {normal = 0,forbidden = 0}
+        for k,v in pairs(upstream_list) do
+            if v.is_forbidden == 0 then
+                upstream_stat.normal = upstream_stat.normal + 1
+            else
+                upstream_stat.forbidden = upstream_stat.forbidden + 1
+            end
+            status_stat.upstream = upstream_stat
+        end
+
+        local server_list = upstream:get_all_servers()
+        local server_stat = {normal = 0,forbidden = 0}
+        for k,v in pairs(server_list) do
+            if v.is_forbidden == 0 and v.status == 0 then
+                server_stat.normal = server_stat.normal + 1
+            else
+                server_stat.forbidden = server_stat.forbidden + 1
+            end
+            status_stat.server = server_stat
+        end
+        data.data = {list = _stat,item = item, stat = status_stat}
+    elseif action == "get_backend_stat" then
+        local _stat = access_log_stat:get_backend_stat()
+        local item = {}
+        local _item = {}
+        for k,v in pairs(_stat) do
+            if not _item[v.backend] then
+                item[v.backend] = v.backend
+                _item[v.backend] = v.backend
+            end
+        end
+        data.data = {list = _stat,item = item}
+    elseif action == "get_status_stat" then
+        local args = ngx.req.get_uri_args()
+        local upstream_id = ""
+        if not args[upstream_id] then
+            upstream_id = args["upstream_id"]
+        end
+        local _status,field = access_log_stat:get_status_stat(upstream_id)
+        data.data = {list = _status,item = field}
+
+    elseif action == "get_list" then
+        local args = ngx.req.get_uri_args()
+        local upstream_id = ""
+        local stime = util.timetostr(ngx.time(),"%Y%m%d")
+        local etime = util.timetostr(ngx.time(),"%Y%m%d")
+        if args["upstream_id"] then
+            upstream_id = args["upstream_id"]
+        end
+        if args["stime"] then
+            stime = args["stime"]
+            _time = util.split(stime,"-")
+            stime = _time[1].._time[2].._time[3]
+        end
+        if args["etime"] then
+            etime = args["etime"]
+            _time = util.split(etime,"-")
+            etime = _time[1].._time[2].._time[3]
+        end
+        local _data = access_log_stat:get_list(upstream_id,stime,etime)
+        data.data = _data
+    end
+    return response:send_json(data)
+end
 
 -- traffic controller
 router['/_admin/traffic'] = function()
@@ -422,9 +534,32 @@ end
 
 -- log controller
 router['/_admin/log'] = function()
-    local message = {message = _msg,status = status,content_type = content_type,ver = config.VER}
+    local message = {
+        message = _msg,
+        status = status,
+        content_type = content_type,
+        ver = config.VER,
+        controller = controller,
+        action = action,
+        js_ver = config.JS_VER,
+        css_ver = config.CSS_VER,
+        user = check_auth(),
+    }
     local view = "_admin/log/index.html"
     var.template_root = config.TEMPLATE_ROOT
+
+    local _upstream_all = upstream:get_all_upstream()
+    local upstream_all = {}
+    for k,v in pairs(_upstream_all) do
+        if v.is_forbidden == 0 then
+            local row = {
+                name = v.name and v.name or v.host,
+                upstream_id = v.upstream_id
+            }
+            upstream_all[#upstream_all+1] = row
+        end
+    end
+    message.upstream = upstream_all
     template.render(view,message)
 end
 

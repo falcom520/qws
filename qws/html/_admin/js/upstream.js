@@ -24,7 +24,7 @@ $(function(){
               }
               content += "<td><a href=\"/_admin/upstream/server?upstream_id="+v.upstream_id+"\" class=\"fa fa-server\"></a></td>";
               content += "<td><a href=\"/_admin/upstream/router?upstream_id="+v.upstream_id+"\" class=\"fa fa-crosshairs\"></a></td>";
-              content += "<td><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-info\">Action</button><button type=\"button\" class=\"btn btn-info dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><span class=\"caret\"></span><span class=\"sr-only\">Toggle Dropdown</span></button><ul class=\"dropdown-menu\" role=\"menu\"><li><a href=\"#editModal\" data-toggle=\"modal\" data-upstreamid=\""+v.upstream_id+"\">Edit</a></li><li><a href=\"#delModal\" data-toggle=\"modal\" data-upstreamid=\""+v.upstream_id+"\">Delete</a></li></ul></div></td>";
+              content += "<td><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-info\">Action</button><button type=\"button\" class=\"btn btn-info dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><span class=\"caret\"></span><span class=\"sr-only\">Toggle Dropdown</span></button><ul class=\"dropdown-menu\" role=\"menu\"><li><a href=\"#editModal\" data-toggle=\"modal\" data-upstreamid=\""+v.upstream_id+"\">Edit</a></li><li><a href=\"#delModal\" data-toggle=\"modal\" data-upstreamid=\""+v.upstream_id+"\">Delete</a></li><li><a href=\"/_admin/upstream/server?upstream_id="+v.upstream_id+"\" data-toggle=\"modal\" \">Add Backend</a></li><li><a href=\"/_admin/upstream/router?upstream_id="+v.upstream_id+"\" data-toggle=\"modal\" \">Add Router</a></li></ul></div></td>";
               content += "</tr>";
               $("tbody").append(content);
               });

@@ -22,4 +22,7 @@ return {
     },
     SSL_DIR = "/root/workspace/qws/qws/ssl",
     PLUGINS = {},--{"log","rate-limiting","request-size-limiting"},
+
+    IS_SYNC = false, -- is sync database data in the cluster mode,default false
+    NO_STAT_SUFFIX = {"js","css","jpg","jpeg","png","gif","ico","tff","mp3"},
 }

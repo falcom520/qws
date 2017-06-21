@@ -1,9 +1,7 @@
 {(_admin/layout/header.html)}
 <div class="wrapper">
-
 	{(_admin/layout/top_header.html)}
 	{(_admin/layout/menu.html)}
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -17,17 +15,69 @@
         <li class="active">Dashboard</li>
       </ol>
     </section>
-
     <!-- Main content -->
     <section class="content">
+		<div class="row">
+			<div class="col-md-3 col-sm-6 col-xs-12">
+			  <div class="info-box">
+				<span class="info-box-icon bg-aqua"><i class="fa  fa-magnet"></i></span>
+				<div class="info-box-content">
+				  <span class="info-box-text">Host Totals</span>
+				  <span class="info-box-number" id="host-totals">0/0<small></small></span>
+				</div>
+				<!-- /.info-box-content -->
+			  </div>
+			  <!-- /.info-box -->
+			</div>
+			<!-- /.col -->
+			<div class="col-md-3 col-sm-6 col-xs-12">
+			  <div class="info-box">
+				<span class="info-box-icon bg-red"><i class="fa fa-server"></i></span>
+				<div class="info-box-content">
+				  <span class="info-box-text">Backend</span>
+				  <span class="info-box-number" id="backend-totals">0/0</span>
+				</div>
+				<!-- /.info-box-content -->
+			  </div>
+			  <!-- /.info-box -->
+			</div>
+			<!-- /.col -->
 
+			<!-- fix for small devices only -->
+			<div class="clearfix visible-sm-block"></div>
+
+			<div class="col-md-3 col-sm-6 col-xs-12">
+			  <div class="info-box">
+				<span class="info-box-icon bg-green"><i class="fa fa-pie-chart"></i></span>
+				<div class="info-box-content">
+				  <span class="info-box-text">Today Request Totals</span>
+				  <span class="info-box-number" id="today-request-total">0</span>
+				</div>
+				<!-- /.info-box-content -->
+			  </div>
+			  <!-- /.info-box -->
+			</div>
+			<!-- /.col -->
+			<div class="col-md-3 col-sm-6 col-xs-12">
+			  <div class="info-box">
+				<span class="info-box-icon bg-yellow"><i class="fa  fa-bug"></i></span>
+				<div class="info-box-content">
+				  <span class="info-box-text">Today Status</span>
+				  <span class="info-box-number" id="today-error-status">0/0/0</span>
+				</div>
+				<!-- /.info-box-content -->
+			  </div>
+			  <!-- /.info-box -->
+			</div>
+			<!-- /.col -->
+		</div>
 	    <div class="row">
 			<div class="col-md-6">
 			  <!-- LINE CHART -->
 			  <div class="box box-info">
 				<div class="box-header with-border">
 				<i class="fa fa-bar-chart-o"></i>
-				  <h3 class="box-title">Request</h3>
+				  <h3 class="box-title">Host Request</h3>
 
 				  <div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -41,33 +91,14 @@
 				<!-- /.box-body -->
 			  </div>
 			  <!-- /.box -->
-			  
-			  <div class="box box-info">
-				<div class="box-header with-border">
-				  <i class="fa fa-bar-chart-o"></i>
-				  <h3 class="box-title">Error Status</h3>
-				  <div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-					</button>
-					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-				  </div>
-				</div>
-				<div class="box-body">
-				  <div id="line-chart-status" style="height: 300px;"></div>
-				</div>
-				<!-- /.box-body-->
-			  </div>
-			  <!-- /.box -->
 			</div>
 			<!-- /.col -->
-
-			
 			<div class="col-md-6">
 			  <!-- LINE CHART -->
 			  <div class="box box-info">
 				<div class="box-header with-border">
 				<i class="fa fa-bar-chart-o"></i>
-				  <h3 class="box-title">PV</h3>
+				  <h3 class="box-title">Backend Response</h3>
 
 				  <div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -81,27 +112,41 @@
 				<!-- /.box-body -->
 			  </div>
 			  <!-- /.box -->
-			  
+			</div>
+			<!-- /.col -->
+      </div>
+      <!-- /.row -->
+	  
+		<div class="row">
+			<div class="col-md-12">
+			  <!-- LINE CHART -->
 			  <div class="box box-info">
 				<div class="box-header with-border">
-				  <i class="fa fa-bar-chart-o"></i>
-				  <h3 class="box-title">Flow</h3>
+				<i class="fa fa-bar-chart-o"></i>
+				  <h3 class="box-title">Backend Status</h3>
+
 				  <div class="box-tools pull-right">
+					<select class="btn btn-box-tool" id="line-chart-backend-upstream-id" >
+					<option value="">all</option>
+					{% for i,v in pairs(upstream) do%}
+					<option value="{{v.upstream_id}}">{{v.name}}</option>
+					{% end%}
+					</select>
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 					</button>
 					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
 				  </div>
 				</div>
-				<div class="box-body">
-				  <div id="line-chart-traffic" style="height: 300px;"></div>
+				<div class="box-body chart-responsive">
+				  <div class="chart" id="line-chart-backend" style="height: 300px;"></div>
 				</div>
-				<!-- /.box-body-->
+				<!-- /.box-body -->
 			  </div>
 			  <!-- /.box -->
 			</div>
 			<!-- /.col -->
-      </div>
-      <!-- /.row -->
+		</div>
+		<!-- /.row -->
     </section>
     <!-- /.content -->
   </div>
@@ -116,103 +161,233 @@
 <script src="/js/raphael-min.js"></script>
 <script src="/js/morris.min.js"></script>
 <script src="/js/fastclick.min.js"></script>
-<script src="/js/app.min.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/jquery.cookie.js"></script>
 <script src="/js/demo.js"></script>
+
 
 <!-- Page script -->
 <script>
   $(function () {
-    // LINE CHART
-    var line_request = new Morris.Line({
-      element: 'line-chart-request',
-      resize: true,
-      data: [
-        {y: '2011 Q1', item1: 2666},
-        {y: '2011 Q2', item1: 2778},
-        {y: '2011 Q3', item1: 4912},
-        {y: '2011 Q4', item1: 3767},
-        {y: '2012 Q1', item1: 6810},
-        {y: '2012 Q2', item1: 5670},
-        {y: '2012 Q3', item1: 4820},
-        {y: '2012 Q4', item1: 15073},
-        {y: '2013 Q1', item1: 10687},
-        {y: '2013 Q2', item1: 8432}
-      ],
-      xkey: 'y',
-      ykeys: ['item1'],
-      labels: ['Item 1'],
-      lineColors: ['#3c8dbc'],
-      hideHover: 'auto'
-    });
+  
+	var sprint_date = function(s) {
+			return s < 10 ? '0' + s: s;
+	}
+	var get_day_by_month = function(year, month){  
+	  month = parseInt(month, 10);  
+	  var d= new Date(year, month, 0);  
+	  return d.getDate();  
+	}
 	
-    // LINE CHART
-    var line_status = new Morris.Line({
-      element: 'line-chart-status',
-      resize: true,
-      data: [
-        {y: '2011 Q1', item1: 2666},
-        {y: '2011 Q2', item1: 2778},
-        {y: '2011 Q3', item1: 4912},
-        {y: '2011 Q4', item1: 3767},
-        {y: '2012 Q1', item1: 6810},
-        {y: '2012 Q2', item1: 5670},
-        {y: '2012 Q3', item1: 4820},
-        {y: '2012 Q4', item1: 15073},
-        {y: '2013 Q1', item1: 10687},
-        {y: '2013 Q2', item1: 8432}
-      ],
-      xkey: 'y',
-      ykeys: ['item1'],
-      labels: ['Item 1'],
-      lineColors: ['#3c8dbc'],
-      hideHover: 'auto'
-    });
+	var get_month_list = function() {
+	//将一个月的日期填入搜索框
+		var currentYear=new Date().getFullYear();
+		var currentMonth=new Date().getMonth()+1;  
+		var days = get_day_by_month(currentYear,currentMonth);
+		var date = new Array();
+		for(i = 0; i < days;i++){
+			var current =currentYear+"-"+sprint_date(currentMonth)+"-"+sprint_date(i+1);
+			date[i] = current;
+		}
+		return date;
+	}
 	
+	var date = get_month_list();
     // LINE CHART
-    var line_pv = new Morris.Line({
-      element: 'line-chart-pv',
-      resize: true,
-      data: [
-        {y: '2011 Q1', item1: 2666},
-        {y: '2011 Q2', item1: 2778},
-        {y: '2011 Q3', item1: 4912},
-        {y: '2011 Q4', item1: 3767},
-        {y: '2012 Q1', item1: 6810},
-        {y: '2012 Q2', item1: 5670},
-        {y: '2012 Q3', item1: 4820},
-        {y: '2012 Q4', item1: 15073},
-        {y: '2013 Q1', item1: 10687},
-        {y: '2013 Q2', item1: 8432}
-      ],
-      xkey: 'y',
-      ykeys: ['item1'],
-      labels: ['Item 1'],
-      lineColors: ['#3c8dbc'],
-      hideHover: 'auto'
-    });
+	$.ajax({
+		type : "GET",
+		url	 : "/api/stat/get_host_stat",
+		data : {},
+		success:function(data){
+			$("#host-totals").html("<span class=\"text-green\">"+data.data.stat.upstream.normal+"</span>/<span class=\"text-red\">"+data.data.stat.upstream.forbidden+"</span>");
+			$("#backend-totals").html("<span class=\"text-green\">"+data.data.stat.server.normal+"</span>/<span class=\"text-red\">"+data.data.stat.server.forbidden+"</span>");
+			$("#today-request-total").html(data.data.stat.request);
+			var _status_str = _status_field = "";
+			$.each(data.data.stat.status,function(k,v){
+				if(_status_field == ""){
+					_status_field = v.status;
+				}else{
+					_status_field += "/"+v.status;
+				}
+				if(_status_str == ""){
+					_status_str = v.num;
+				}else{
+					_status_str += "/"+v.num;
+				}
+			});
+			$("#today-error-status").html(_status_str+"("+_status_field+")");
+			
+			var _stat = {};
+			var stat = new Array();
+			$.each(date,function(x,y){
+				if(_stat[y] == undefined){
+					_stat[y] = {};
+				}
+				$.each(data.data.list,function(k,v){
+					var _y = y.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1$2$3");
+					if(_y == v.time && _stat[y][v.upstream_id] == undefined){
+						_stat[y][v.upstream_id] = v.num;
+					}
+					
+				});
+			});
+			
+			var _field = new Array();
+			var _values = new Array();
+			var i = 0;
+			$.each(data.data.item,function(k,v){
+				_field[i] = k;
+				_values[i] = v;
+				i++;
+			});
+			var i = 0;
+			$.each(_stat,function(k,v){
+				var row = {"y":k};
+				$.each(v,function(k1,v1){
+					if(row[k1] == undefined){
+						row[k1] = v1;
+					}
+				});
+				stat[i] = row;
+				i++;
+			});
+		    var line_request = new Morris.Line({
+			  element: 'line-chart-request',
+			  resize: false,
+			  parseTime:false,
+			  data: stat,
+			  xkey: 'y',
+			  ykeys: _field,
+			  labels: _values,
+			  lineColors: ['#3c8dbc'],
+			  hideHover: 'auto'
+			});
+		}
+	});
+
 	
-    // LINE CHART
-    var line_traffic = new Morris.Line({
-      element: 'line-chart-traffic',
-      resize: true,
-      data: [
-        {y: '2011 Q1', item1: 2666},
-        {y: '2011 Q2', item1: 2778},
-        {y: '2011 Q3', item1: 4912},
-        {y: '2011 Q4', item1: 3767},
-        {y: '2012 Q1', item1: 6810},
-        {y: '2012 Q2', item1: 5670},
-        {y: '2012 Q3', item1: 4820},
-        {y: '2012 Q4', item1: 15073},
-        {y: '2013 Q1', item1: 10687},
-        {y: '2013 Q2', item1: 8432}
-      ],
-      xkey: 'y',
-      ykeys: ['item1'],
-      labels: ['Item 1'],
-      lineColors: ['#3c8dbc'],
-      hideHover: 'auto'
-    });
+	$.ajax({
+		type  : "GET",
+		url   : "/api/stat/get_backend_stat",
+		data  : {},
+		success:function(data){
+			var _stat = {};
+			var stat = new Array();
+			$.each(date,function(x,y){
+				if(_stat[y] == undefined){
+					_stat[y] = {};
+				}
+				$.each(data.data.list,function(k,v){
+					var _y = y.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1$2$3");
+					if(_y == v.time && _stat[y][v.backend] == undefined){
+						_stat[y][v.backend] = v.num;
+					}
+					
+				});
+			});
+			
+			var _field = new Array();
+			var _values = new Array();
+			var i = 0;
+			$.each(data.data.item,function(k,v){
+				_field[i] = k;
+				_values[i] = v;
+				i++;
+			});
+			var i = 0;
+			$.each(_stat,function(k,v){
+				var row = {"y":k.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3")};
+				$.each(v,function(k1,v1){
+					if(row[k1] == undefined){
+						row[k1] = v1;
+					}
+				});
+				stat[i] = row;
+				i++;
+			});
+		
+		    // LINE CHART
+			var line_status = new Morris.Line({
+			  element: 'line-chart-pv',
+			  resize: false,
+			  parseTime:false,
+			  data: stat,
+			  xkey: 'y',
+			  ykeys: _field,
+			  labels: _values,
+			  lineColors: ['#3c8dbc'],
+			  hideHover: 'auto'
+			});
+		}
+	});
+	
+
+	var get_status_stat = function(upstream_id){
+		var data = {};
+		if(upstream_id != ""){
+			data = {upstream_id:upstream_id};
+		}
+		$.ajax({
+			type  : "GET",
+			url   : "/api/stat/get_status_stat",
+			data  : data,
+			success:function(data){
+				var _stat = {};
+				var stat = new Array();
+				$.each(date,function(x,y){
+					if(_stat[y] == undefined){
+						_stat[y] = {};
+					}
+					$.each(data.data.list,function(k,v){
+						var _y = y.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1$2$3");
+						if(_y == v.time && _stat[y][v.item] == undefined){
+							_stat[y][v.item] = v.num;
+						}
+					});
+				});
+				
+				var _field = new Array();
+				var _values = new Array();
+				var i = 0;
+				$.each(data.data.item,function(k,v){
+					_field[i] = v;
+					_values[i] = v;
+					i++;
+				});
+				var i = 0;
+				$.each(_stat,function(k,v){
+					var row = {"y":k.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3")};
+					$.each(v,function(k1,v1){
+						if(row[k1] == undefined){
+							row[k1] = v1;
+						}
+					});
+					stat[i] = row;
+					i++;
+				});
+			
+				// LINE CHART
+				var line_status = new Morris.Line({
+				  element: 'line-chart-backend',
+				  resize: false,
+				  parseTime:false,
+				  data: stat,
+				  xkey: 'y',
+				  ykeys: _field,
+				  labels: _values,
+				  lineColors: ['#3c8dbc'],
+				  hideHover: 'auto'
+				});
+			}
+		});
+	}
+	
+	get_status_stat();
+	$("#line-chart-backend-upstream-id").change(function(){
+		var upstream_id = $(this).val();
+		$("#line-chart-backend").html("");
+		get_status_stat(upstream_id);
+	});
   });
 </script>
 

@@ -2,8 +2,6 @@
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-      <!-- Sidebar user panel -->
-      <div class="user-panel">
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         {%
@@ -24,13 +22,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            {% if (action == "monitor" or action == "") and controller == "/_admin/dashboard" then %}
-            <li class="active">
-            {%else%}
-            <li class="">
-            {%end%}
-            <a href="/_admin/dashboard/monitor"><i class="fa fa-video-camera"></i> Monitor</a></li>
-            {% if action == "report" and controller == "/_admin/dashboard" then %}
+            {% if controller == "/_admin/dashboard" then %}
             <li class="active">
             {%else%}
             <li class="">
@@ -65,6 +57,33 @@
             <a href="/_admin/upstream"><i class="fa fa-retweet"></i> Upstream Setting</a></li>
           </ul>
         </li>
+		{%
+		if controller == "/_admin/log" then
+		%}
+		<li class="active treeview">
+        {%
+        else
+        %}
+        <li class="treeview">
+        {%
+        end
+        %}
+		<a href="#">
+            <i class="fa fa-list"></i>
+            <span>Statistics</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            {% if controller == "/_admin/log" then %}
+            <li class="active">
+            {%else%}
+            <li class="">
+            {%end%}
+            <a href="/_admin/log"><i class="fa fa-circle-o"></i> URI List</a></li>
+          </ul>
+		</li>
       </ul>
     </section>
     <!-- /.sidebar -->

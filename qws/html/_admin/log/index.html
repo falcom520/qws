@@ -1,0 +1,101 @@
+{(_admin/layout/header.html)}
+<div class="wrapper">
+
+	{(_admin/layout/top_header.html)}
+	{(_admin/layout/menu.html)}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Statistics
+        <small>URI List</small>
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<ul class="nav navbar-nav">
+                <li class="active">
+					<div class="form-group">
+						<select class="form-control select2" style="width: 100%;" id="upstream_id">
+						  <option selected="selected" value="">All</option>
+						  {% for k,v in pairs(upstream) do %}
+						  <option value="{{v.upstream_id}}">{{v.name}}</option>
+						  {% end %}
+						  
+						</select>
+					</div>
+			    </li>
+                <li>
+					<div class="input-group">
+					  <div class="input-group-addon" style="width:0px;">
+						<i class="fa fa-calendar"></i>
+					  </div>
+					  <input type="text" class="form-control" id="start-datepicker">
+					</div>
+				</li>
+				<li>
+					<div class="input-group">
+					  <div class="input-group-addon" style="width:0px;">
+						<i class="fa fa-calendar"></i>
+					  </div>
+					  <input type="text" class="form-control pull-right" id="end-datepicker">
+					</div>
+				</li>
+				<li>
+				<button type="submit" class="btn btn-info pull-right" id="search-btn">Search</button>
+				</li>
+              </ul>
+		</div>
+	</div>
+	<div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+            <!-- /.box-header -->
+				<div class="box-body table-responsive no-padding">
+				  <table class="table table-hover">
+					<tbody><tr id="tab-menu">
+					  <th>UpstreamName</th>
+					  <th>Backend</th>
+					  <th>URI</th>
+					  <th>Status</th>
+					  <th>RequestNum</th>
+					</tr>
+					<tr id="tips" style="text-align:center;">
+					  <td colspan="5">no data</td>
+					</tr>
+				  </tbody></table>
+				</div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  {(_admin/layout/bottom.html)}
+</div>
+<script>
+var upstream_list = new Array();
+{% for k,v in pairs(upstream) do %}
+upstream_list['{{v.upstream_id}}'] = '{{v.name}}';
+{% end %}
+</script>
+<!-- ./wrapper -->
+<script src="/js/jquery-2.2.3.min.js?v={{js_ver}}"></script>
+<script src="/js/bootstrap.min.js?v={{js_ver}}"></script>
+<script src="/js/jquery.cookie.js?v={{js_ver}}"></script>
+<script src="/js/app.js?v={{js_ver}}"></script>
+<script src="/js/demo.js?v={{js_ver}}"></script>
+<script src="/js/fileinput.min.js?v={{js_ver}}"></script>
+<script src="/js/moment.min.js?v={{js_ver}}"></script>
+<script src="/js/bootstrap-datepicker.js?v={{js_ver}}"></script>
+<script src="/js/log.js?v={{js_ver}}"></script>
+{(_admin/layout/footer.html)}

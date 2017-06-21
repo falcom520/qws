@@ -32,7 +32,7 @@ $(function(){
               $("tbody").append(content);
               });
           }else{
-			 var no_data = "<tr id=\"tips\" style=\"text-align:center;\"><td colspan=\"10\" class=\"box-title\">no data</td></tr>";
+			 var no_data = "<tr id=\"tips\" style=\"text-align:center;\"><td colspan=\"8\" class=\"box-title\">no data</td></tr>";
 			$("#tab-menu ~ tr").remove();
 			$("tbody").append(no_data);
 		  }
@@ -143,7 +143,7 @@ $(function(){
     $('#delModal').on('show.bs.modal',function(event){
         var server_id = $(event.relatedTarget).data('server-id');
         $("#delsubmit").attr("data-server-id",server_id);
-        $(this).find("div .modal-body").html("do you really remove this server?");
+        $(this).find("div .modal-body").html("do you really remove this Backend?");
         $(this).find("div .modal-body").removeClass("text-red");
     });
     $("#delsubmit").click(function(){

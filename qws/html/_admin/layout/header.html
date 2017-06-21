@@ -3,26 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>qws - qiucloud web system</title>
+  <title>TIG Gateway</title>
   <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="stylesheet" href="/css/bootstrap.min.css?v={{css_ver}}">
   <link rel="stylesheet" href="/css/font-awesome.min.css?v={{css_ver}}">
   <link rel="stylesheet" href="/css/AdminLTE.min.css?v={{css_ver}}">
   <link rel="stylesheet" href="/css/_all-skins.min.css?v={{css_ver}}">
   <link rel="stylesheet" href="/css/morris.css?v={{css_ver}}">
+  <link rel="stylesheet" href="/css/ionicons.min.css?v={{css_ver}}">
   <!--[if lt IE 9]>
   <script src="/js/html5shiv.min.3.7.3.js?v={{js_ver}}"></script>
   <script src="/js/respond.min.1.4.2.js?v={{js_ver}}"></script>
   <![endif]-->
 </head>
-{% 
-if ngx.var.uri == "/_admin/login" then
-%}
-<body class="hold-transition login-page">
-{%
-else
-%}
 <body class="hold-transition skin-blue sidebar-mini">
-{%
-end
-%}

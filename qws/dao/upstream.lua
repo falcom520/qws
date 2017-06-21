@@ -217,6 +217,33 @@ function _M:get_servers_all()
     return res
 end
 
+function _M:get_all_servers()
+    local dao = singleton.dao
+    assert(dao,"connect to db failed.")
+
+    local sql = "select server_id,upstream_id,server,port,weight,fails,status,is_forbidden from upstream_server where 1"
+    dao:query(sql)
+    local result = dao:store_result()
+    local res = {}
+    if result then
+        for i,server_id,upstream_id,server,port,weight,fails,status,is_forbidden in result:rows() do
+            local server = {
+                server_id  = server_id,
+                upstream_id= upstream_id,
+                server     = server,
+                port       = port,
+                weight     = weight,
+                fails      = fails,
+                status     = tonumber(status),
+                is_forbidden = tonumber(is_forbidden),
+            }
+            res[i] = server
+        end
+    end
+    result:free()
+    return res
+end
+
 
 --get router by upstream_id
 --
