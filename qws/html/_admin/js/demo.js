@@ -335,12 +335,5 @@
     if ($('body').hasClass('sidebar-collapse')) {
       $("[data-layout='sidebar-collapse']").attr('checked', 'checked');
     }
-
-	var scale = $.cookie("scale");
-	if(scale == undefined || scale == "false"){
-		$("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
-	}else{
-		$("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
-	}
   }
 })(jQuery, $.AdminLTE);

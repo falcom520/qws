@@ -455,6 +455,9 @@ function _M:update_servers(server_id,data)
     local dao = singleton.dao
     assert(dao,"connect to db failed.")
 
+    if not data["updated_time"] then
+        data["updated_time"] = util.timetostr()
+    end
     local set = ""
     for k,v in pairs(data) do
         if set == "" then
@@ -502,6 +505,9 @@ function _M:update_upstream(data)
     if not util.is_empty(data['is_forbidden']) or tonumber(data['is_forbidden']) > 1 then
         data['is_forbidden'] = 1
     end
+    if not data["updated_time"] then
+        data["updated_time"] = util.timetostr()
+    end
 
     local dao = singleton.dao
     assert(dao,"connect to db failed.")
@@ -523,6 +529,9 @@ function _M:update_upstream(data)
     local row = result:fetch("a")
     result:free()
     if not row then -- add
+        if not data["created_time"] then
+            data["created_time"] = util.timetostr()
+        end
         local field = ""
         local values = ""
         for k,v in pairs(data) do
@@ -622,6 +631,9 @@ function _M:update_server(data)
         data["port"] = 80
     end
     data["is_forbidden"] = data["is_forbidden"] or 1
+    if not data["updated_time"] then
+        data["updated_time"] = util.timetostr()
+    end
 
     local dao = singleton.dao
     assert(dao,"connect to db failed.")
@@ -635,6 +647,9 @@ function _M:update_server(data)
     status,err = util.check_tcp(data["server"],data["port"])
     data['status'] = status
     if not row or data["server_id"] ~= row["server_id"] then --add
+        if not data["created_time"] then
+            data["created_time"] = util.timetostr()
+        end
         local field = ""
         local value = ""
         for k,v in pairs(data) do
@@ -782,6 +797,10 @@ function _M:update_router(data)
     local result = dao:store_result()
     local row = result:fetch('a')
     result:free()
+
+    if not data["updated_time"] then
+        data["updated_time"] = util.timetostr()
+    end
     if row then -- update
         local sql = "update router set "
         for k,v in pairs(data) do
@@ -797,6 +816,9 @@ function _M:update_router(data)
         flush_cache:upstream(upstream["host"])
         return true
     else
+        if not data["created_time"] then
+            data["created_time"] = util.timetostr()
+        end
         local sql = "insert into router ("
         local field = ""
         local value = ""

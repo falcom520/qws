@@ -16,6 +16,12 @@ if (typeof jQuery === "undefined") {
   throw new Error("AdminLTE requires jQuery");
 }
 
+var scale = $.cookie("scale");
+if(scale == undefined || scale == "false"){
+	$("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
+}else{
+	$("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
+}
 /* AdminLTE
  *
  * @type Object
