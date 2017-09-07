@@ -4,7 +4,10 @@ QWS Web网关主要借鉴kong的整体架构和插件模式，基于openresty的
 
 目前支持动态负载均衡、访问定向、限速(lua-resty-limit-traffic)、请求状态统计等
 
-
+![github](https://github.com/falcom520/qws/blob/master/doc/01.png "github") 
+![github](https://github.com/falcom520/qws/blob/master/doc/02.png "github") 
+![github](https://github.com/falcom520/qws/blob/master/doc/03.png "github") 
+![github](https://github.com/falcom520/qws/blob/master/doc/04.png "github") 
 
 # See Also
 
